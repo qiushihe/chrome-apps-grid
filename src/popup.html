@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Apps Grid Popup -- Yes, this is so hard to do.</title>
+    <style>
+      *:focus {
+        outline: none;
+      }
+
+      .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      body {
+        margin: 0px;
+      }
+
+      #list {
+        list-style: none;
+        width: 264px;
+        margin: 28px;
+        padding: 0;
+      }
+
+      #list li {
+        display: inline-block;
+        float: left;
+        margin: 7px 1px;
+        padding: 0;
+      }
+
+      #list li a {
+        display: block;
+        width: 84px;
+        height: 84px;
+        border-color: transparent;
+        border-width: 1px;
+        border-style: solid;
+        text-align: center;
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+      }
+
+      #list li:hover a {
+        border-color: #e5e5e5;
+      }
+
+      #list li a::before {
+        background-image: url("services.png");
+        display: block;
+        content: "";
+        width: 64px;
+        height: 64px;
+        margin: 0 auto;
+      }
+
+      #service-gmail a::before { background-position-x: 0px; }
+      #service-clendar a::before { background-position-x: -64px; }
+      #service-keep a::before { background-position-x: -128px; }
+      #service-hangouts a::before { background-position-x: -192px; }
+      #service-drive a::before { background-position-x: -256px; }
+      #service-photo a::before { background-position-x: -320px; }
+      #service-play a::before { background-position-x: -384px; }
+
+      #footer {
+        display: block;
+        background-color: #F5F5F5;
+      }
+
+      #footer-more {
+        display: block;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        text-decoration: none;
+        color: #737373;
+        cursor: pointer;
+      }
+    </style>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <div id="services">
+      <ul id="list" class="clearfix">
+        <li id="service-gmail">
+          <a class="service-link" data-service-url="https://mail.google.com">Gmail</a>
+        </li>
+        <li id="service-clendar">
+          <a class="service-link" data-service-url="https://calendar.google.com">Calendar</a>
+        </li>
+        <li id="service-keep">
+          <a class="service-link" data-service-url="https://keep.google.com">Keep</a>
+        </li>
+        <li id="service-hangouts">
+          <a class="service-link" data-service-url="https://hangouts.google.com">Hangouts</a>
+        </li>
+        <li id="service-drive">
+          <a class="service-link" data-service-url="https://drive.google.com">Drive</a>
+        </li>
+        <li id="service-photo">
+          <a class="service-link" data-service-url="https://photos.google.com">Photo</a>
+        </li>
+        <li id="service-play">
+          <a class="service-link" data-service-url="https://play.google.com/music">Play</a>
+        </li>
+      </ul>
+      <div id="footer">
+        <a id="footer-more">More</a>
+      </div>
+    </div>
+  </body>
+</html>
