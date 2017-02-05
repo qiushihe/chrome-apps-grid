@@ -2,7 +2,7 @@
 
 Chrome extension to show a popover containing links to various google services, because this is too hard to do.
 
-![Screenshot](https://github.com/qiushihe/chrome-apps-grid/master/screenshots/screenshot-1.png)
+![Screenshot](https://raw.githubusercontent.com/qiushihe/chrome-apps-grid/master/screenshots/screenshot-1.png)
 
 ### License
 
