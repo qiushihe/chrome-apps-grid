@@ -26,6 +26,9 @@ var SERVICES = {
   translate: {label: "Translate",   url: "https://translate.google.com"}
 };
 
+var SortableInstance = null;
+var SortableSaving = false;
+
 var clearMenu = function () {
   var list = document.getElementById("list");
   if (list) {
@@ -48,6 +51,7 @@ var getServiceElement = function (service) {
 
   var element = document.createElement("li");
   element.id = "service-" + service;
+  element.setAttribute("data-service-name", service);
 
   var link = document.createElement("a");
   link.innerText = serviceInfo.label;
@@ -74,6 +78,52 @@ var rebuildMenu = function (services) {
   }
 };
 
+var loadOrder = function (sortable) {
+  var storageKey = sortable.options.group.name;
+  chrome.storage.sync.get(storageKey, function(data) {
+    var order = data[storageKey];
+    if (order) {
+      sortable.sort(order);
+    }
+  });
+};
+
+var saveOrder = function (sortable) {
+  if (SortableSaving) {
+    return;
+  }
+
+  var storageKey = sortable.options.group.name;
+  var order = sortable.toArray();
+
+  var data = {};
+  data[storageKey] = order;
+
+  SortableSaving = true;
+  chrome.storage.sync.set(data, function() {
+    SortableSaving = false;
+  });
+};
+
 document.addEventListener("DOMContentLoaded", function() {
   rebuildMenu(["gmail", "calendar", "keep", "hangouts", "drive", "photo", "music"]);
+
+  if (SortableInstance) {
+    SortableInstance.destroy();
+    SortableInstance = null;
+  }
+
+  var list = document.getElementById("list");
+  if (list) {
+    SortableInstance = Sortable.create(list, {
+      group: "apps-grid-services",
+      dataIdAttr: "data-service-name",
+      onSort: function () {
+        // The `this` inside this function is the sortable instance.
+        saveOrder(this);
+      }
+    });
+
+    loadOrder(SortableInstance);
+  }
 });
