@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Apps Grid",
   "description": "This extension shows a popover containing links to various google services, because this is too hard to do.",
-  "version": "1.0",
+  "version": "1.1.0",
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
