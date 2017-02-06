@@ -3,19 +3,9 @@
   <head>
     <title>Apps Grid Popup -- Yes, this is so hard to do.</title>
     <style>
-      *:focus {
-        outline: none;
-      }
-
-      .clearfix::after {
-        content: "";
-        display: table;
-        clear: both;
-      }
-
-      body {
-        margin: 0px;
-      }
+      *:focus { outline: none; }
+      .clearfix::after {content: ""; display: table; clear: both; }
+      body { margin: 0; padding: 0;}
 
       #list {
         list-style: none;
@@ -32,7 +22,6 @@
       }
 
       #list li a {
-        display: block;
         width: 84px;
         height: 84px;
         border-color: transparent;
@@ -41,20 +30,10 @@
         text-align: center;
         text-decoration: none;
         color: black;
-        cursor: pointer;
       }
 
       #list li:hover a {
         border-color: #e5e5e5;
-      }
-
-      #list li a::before {
-        background-image: url("services.png");
-        display: block;
-        content: "";
-        width: 64px;
-        height: 64px;
-        margin: 0 auto;
       }
 
       #footer {
@@ -71,34 +50,12 @@
         color: #737373;
         cursor: pointer;
       }
-
-      #service-gmail     a::before { background-position-x: 0px; }
-      #service-calendar  a::before { background-position-x: -64px; }
-      #service-keep      a::before { background-position-x: -128px; }
-      #service-hangouts  a::before { background-position-x: -192px; }
-      #service-drive     a::before { background-position-x: -256px; }
-      #service-photo     a::before { background-position-x: -320px; }
-      #service-play      a::before { background-position-x: -384px; }
-      #service-movies    a::before { background-position-x: -448px; }
-      #service-music     a::before { background-position-x: -512px; }
-      #service-games     a::before { background-position-x: -576px; }
-      #service-books     a::before { background-position-x: -640px; }
-      #service-newsstand a::before { background-position-x: -704px; }
-      #service-store     a::before { background-position-x: -768px; }
-      #service-docs      a::before { background-position-x: -832px; }
-      #service-sheets    a::before { background-position-x: -896px; }
-      #service-slides    a::before { background-position-x: -960px; }
-      #service-forms     a::before { background-position-x: -1024px; }
-      #service-contacts  a::before { background-position-x: -1088px; }
-      #service-maps      a::before { background-position-x: -1152px; }
-      #service-youtube   a::before { background-position-x: -1216px; }
-      #service-plus      a::before { background-position-x: -1280px; }
-      #service-blogger   a::before { background-position-x: -1344px; }
-      #service-news      a::before { background-position-x: -1408px; }
-      #service-account   a::before { background-position-x: -1472px; }
-      #service-translate a::before { background-position-x: -1536px; }
     </style>
+
+    <link rel="stylesheet" type="text/css" href="shared.css">
+
     <script src="sortable-1.5.0-rc1.min.js"></script>
+    <script src="shared.js"></script>
     <script src="popup.js"></script>
   </head>
   <body>

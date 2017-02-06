@@ -1,31 +1,3 @@
-var SERVICES = {
-  gmail:     {label: "Gmail",       url: "https://mail.google.com"},
-  calendar:  {label: "Calendar",    url: "https://calendar.google.com"},
-  keep:      {label: "Keep",        url: "https://keep.google.com"},
-  hangouts:  {label: "Hangouts",    url: "https://hangouts.google.com"},
-  drive:     {label: "Drive",       url: "https://drive.google.com"},
-  photo:     {label: "Photo",       url: "https://photos.google.com"},
-  play:      {label: "Play",        url: "https://play.google.com"},
-  movies:    {label: "Movies & TV", url: "https://play.google.com/movies"},
-  music:     {label: "Music",       url: "https://play.google.com/music"},
-  games:     {label: "Games",       url: null},
-  books:     {label: "Books",       url: "https://play.google.com/books"},
-  newsstand: {label: "Newstand",    url: "https://play.google.com/newsstand"},
-  store:     {label: "Store",       url: null},
-  docs:      {label: "Docs",        url: "https://docs.google.com/document"},
-  sheets:    {label: "Sheets",      url: "https://docs.google.com/spreadsheets"},
-  slides:    {label: "Slides",      url: "https://docs.google.com/presentation"},
-  forms:     {label: "Forms",       url: "https://docs.google.com/forms"},
-  contacts:  {label: "Contacts",    url: "https://contacts.google.com"},
-  maps:      {label: "Maps",        url: "https://www.google.com/maps"},
-  youtube:   {label: "YouTube",     url: "https://www.youtube.com"},
-  plus:      {label: "Google+",     url: "https://plus.google.com"},
-  blogger:   {label: "Blogger",     url: "https://www.blogger.com"},
-  news:      {label: "News",        url: "https://news.google.com"},
-  account:   {label: "My Account",  url: "https://myaccount.google.com"},
-  translate: {label: "Translate",   url: "https://translate.google.com"}
-};
-
 var SortableInstance = null;
 var SortableSaving = false;
 
@@ -44,13 +16,14 @@ var openService = function (serviceUrl) {
 };
 
 var getServiceElement = function (service) {
-  var serviceInfo = SERVICES[service];
+  var serviceInfo = AppsGrid.AllServices[service];
   if (!serviceInfo || !serviceInfo.label || !serviceInfo.url) {
     return null;
   }
 
   var element = document.createElement("li");
   element.id = "service-" + service;
+  element.className = "service-item";
   element.setAttribute("data-service-name", service);
 
   var link = document.createElement("a");
@@ -79,7 +52,7 @@ var rebuildMenu = function (services) {
 };
 
 var loadOrder = function (sortable) {
-  var storageKey = sortable.options.group.name;
+  var storageKey = "apps-grid-services-order";
   chrome.storage.sync.get(storageKey, function(data) {
     var order = data[storageKey];
     if (order) {
@@ -93,7 +66,7 @@ var saveOrder = function (sortable) {
     return;
   }
 
-  var storageKey = sortable.options.group.name;
+  var storageKey = "apps-grid-services-order";
   var order = sortable.toArray();
 
   var data = {};
@@ -105,9 +78,7 @@ var saveOrder = function (sortable) {
   });
 };
 
-document.addEventListener("DOMContentLoaded", function() {
-  rebuildMenu(["gmail", "calendar", "keep", "hangouts", "drive", "photo", "music"]);
-
+var initializeSortable = function () {
   if (SortableInstance) {
     SortableInstance.destroy();
     SortableInstance = null;
@@ -116,7 +87,6 @@ document.addEventListener("DOMContentLoaded", function() {
   var list = document.getElementById("list");
   if (list) {
     SortableInstance = Sortable.create(list, {
-      group: "apps-grid-services",
       dataIdAttr: "data-service-name",
       onSort: function () {
         // The `this` inside this function is the sortable instance.
@@ -126,4 +96,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
     loadOrder(SortableInstance);
   }
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+  AppsGrid.GetEnabledServices(function (services) {
+    rebuildMenu(services);
+    initializeSortable();
+  });
+
+  document.getElementById("footer-more").onclick = function () {
+    chrome.tabs.create({url: "chrome://extensions/?options=" + chrome.runtime.id });
+  };
 });
