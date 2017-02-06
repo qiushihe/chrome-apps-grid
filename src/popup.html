@@ -57,14 +57,6 @@
         margin: 0 auto;
       }
 
-      #service-gmail a::before { background-position-x: 0px; }
-      #service-clendar a::before { background-position-x: -64px; }
-      #service-keep a::before { background-position-x: -128px; }
-      #service-hangouts a::before { background-position-x: -192px; }
-      #service-drive a::before { background-position-x: -256px; }
-      #service-photo a::before { background-position-x: -320px; }
-      #service-play a::before { background-position-x: -384px; }
-
       #footer {
         display: block;
         background-color: #F5F5F5;
@@ -79,34 +71,38 @@
         color: #737373;
         cursor: pointer;
       }
+
+      #service-gmail     a::before { background-position-x: 0px; }
+      #service-clendar   a::before { background-position-x: -64px; }
+      #service-keep      a::before { background-position-x: -128px; }
+      #service-hangouts  a::before { background-position-x: -192px; }
+      #service-drive     a::before { background-position-x: -256px; }
+      #service-photo     a::before { background-position-x: -320px; }
+      #service-play      a::before { background-position-x: -384px; }
+      #service-movies    a::before { background-position-x: -448px; }
+      #service-music     a::before { background-position-x: -512px; }
+      #service-games     a::before { background-position-x: -576px; }
+      #service-books     a::before { background-position-x: -640px; }
+      #service-newsstand a::before { background-position-x: -704px; }
+      #service-store     a::before { background-position-x: -768px; }
+      #service-docs      a::before { background-position-x: -832px; }
+      #service-sheets    a::before { background-position-x: -896px; }
+      #service-slides    a::before { background-position-x: -960px; }
+      #service-forms     a::before { background-position-x: -1024px; }
+      #service-contacts  a::before { background-position-x: -1088px; }
+      #service-maps      a::before { background-position-x: -1152px; }
+      #service-youtube   a::before { background-position-x: -1216px; }
+      #service-plus      a::before { background-position-x: -1280px; }
+      #service-blogger   a::before { background-position-x: -1344px; }
+      #service-news      a::before { background-position-x: -1408px; }
+      #service-account   a::before { background-position-x: -1472px; }
+      #service-translate a::before { background-position-x: -1536px; }
     </style>
     <script src="popup.js"></script>
   </head>
   <body>
     <div id="services">
-      <ul id="list" class="clearfix">
-        <li id="service-gmail">
-          <a class="service-link" data-service-url="https://mail.google.com">Gmail</a>
-        </li>
-        <li id="service-clendar">
-          <a class="service-link" data-service-url="https://calendar.google.com">Calendar</a>
-        </li>
-        <li id="service-keep">
-          <a class="service-link" data-service-url="https://keep.google.com">Keep</a>
-        </li>
-        <li id="service-hangouts">
-          <a class="service-link" data-service-url="https://hangouts.google.com">Hangouts</a>
-        </li>
-        <li id="service-drive">
-          <a class="service-link" data-service-url="https://drive.google.com">Drive</a>
-        </li>
-        <li id="service-photo">
-          <a class="service-link" data-service-url="https://photos.google.com">Photo</a>
-        </li>
-        <li id="service-play">
-          <a class="service-link" data-service-url="https://play.google.com/music">Play</a>
-        </li>
-      </ul>
+      <ul id="list" class="clearfix"></ul>
       <div id="footer">
         <a id="footer-more">More</a>
       </div>
