@@ -11,8 +11,19 @@ var clearMenu = function () {
 };
 
 var openService = function (serviceUrl) {
-  // TODO: Don't open new tab if the current tab is the "new tab" tab
-  chrome.tabs.create({active: true, url: serviceUrl});
+  chrome.tabs.query({active: true, lastFocusedWindow: true}, function (tabs) {
+    var tab = tabs[0];
+    if (tab && tab.url && tab.url.match(/chrome:\/\/newtab/)) {
+      // Replace the current tab with the selected service if the current tab is the "new tab" tab
+      chrome.tabs.update(tab.id, {url: serviceUrl});
+    } else {
+      // Open a new tab for the selected service if the current tab is not the "new tab" tab
+      chrome.tabs.create({active: true, url: serviceUrl});
+    }
+  });
+
+  // Close the extension popup
+  window.close();
 };
 
 var getServiceElement = function (service) {
