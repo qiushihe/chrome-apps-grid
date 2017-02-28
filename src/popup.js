@@ -1,8 +1,15 @@
 var SortableInstance = null;
 var SortableSaving = false;
 
-var clearMenu = function () {
-  var list = document.getElementById("list");
+var getAppsList = function () {
+  return document.querySelector(".services-area-apps .services-list");
+};
+
+var getServiesList = function () {
+  return document.querySelector(".services-area-services .services-list");
+};
+
+var clearList = function (list) {
   if (list) {
     while (list.firstChild) {
       list.removeChild(list.firstChild);
@@ -10,55 +17,100 @@ var clearMenu = function () {
   }
 };
 
-var openService = function (serviceUrl) {
-  chrome.tabs.query({active: true, lastFocusedWindow: true}, function (tabs) {
-    var tab = tabs[0];
-    if (tab && tab.url && tab.url.match(/chrome:\/\/newtab/)) {
-      // Replace the current tab with the selected service if the current tab is the "new tab" tab
-      chrome.tabs.update(tab.id, {url: serviceUrl});
-    } else {
-      // Open a new tab for the selected service if the current tab is not the "new tab" tab
-      chrome.tabs.create({active: true, url: serviceUrl});
-    }
-  });
-
-  // Close the extension popup
-  window.close();
-};
-
-var getServiceElement = function (service) {
-  var serviceInfo = AppsGrid.AllServices[service];
-  if (!serviceInfo || !serviceInfo.label || !serviceInfo.url) {
-    return null;
-  }
-
+var getMenuItemElement = function (name, options) {
   var element = document.createElement("li");
-  element.id = "service-" + service;
-  element.className = "service-item";
-  element.setAttribute("data-service-name", service);
+  element.id = options.id;
+  element.className = "menu-item menu-item-" + options.type;
+  element.setAttribute("data-" + options.type + "-name", name);
 
   var link = document.createElement("a");
-  link.innerText = serviceInfo.label;
   link.onclick = function () {
-    openService(serviceInfo.url);
+    options.onClick(options.onClickData)
   };
-
   element.appendChild(link);
+
+  var icon = document.createElement("span");
+  icon.className = "icon";
+  link.appendChild(icon);
+
+  var text = document.createElement("span");
+  text.className = "label";
+  text.innerText = options.label;
+  link.appendChild(text);
+
   return element;
 };
 
-var rebuildMenu = function (services) {
-  clearMenu();
+var onAppClicked = function (app) {
+  chrome.management.launchApp(app.id, function () {
+    // Close the extension popup
+    window.close();
+  });
+};
 
-  var list = document.getElementById("list");
+var rebuildAppsMenu = function (apps) {
+  clearList(getAppsList());
+
+  var list = getAppsList();
   if (list) {
-    for (var i = 0; i < services.length; i++) {
-      var service = services[i];
-      var element = getServiceElement(service);
-      if (element) {
+    apps.forEach(function (app) {
+      var element = getMenuItemElement(app.id, {
+        id: "app-" + app.id,
+        type: "app",
+        label: app.shortName,
+        onClick: onAppClicked,
+        onClickData: app
+      });
+
+      var iconElement = element.querySelector("a .icon");
+      if (iconElement) {
+        var iconUrl = app.icons.reduce(function (largestIcon, icon) {
+          return icon.size > largestIcon.size ? icon : largestIcon;
+        }, {size: 0, url: null}).url;
+        iconElement.style["backgroundImage"] = "url(" + iconUrl + ")";
+      }
+
+      list.appendChild(element);
+    });
+  }
+};
+
+var onServiceClicked = function (service) {
+  if (service && service.url) {
+    chrome.tabs.query({active: true, lastFocusedWindow: true}, function (tabs) {
+      var tab = tabs[0];
+
+      if (tab && tab.url && tab.url.match(/chrome:\/\/newtab/)) {
+        // Replace the current tab with the selected service if the current tab is the "new tab" tab
+        chrome.tabs.update(tab.id, {url: service.url});
+      } else {
+        // Open a new tab for the selected service if the current tab is not the "new tab" tab
+        chrome.tabs.create({active: true, url: service.url});
+      }
+
+      // Close the extension popup
+      window.close();
+    });
+  }
+};
+
+var rebuildServicesMenu = function (services) {
+  clearList(getServiesList());
+
+  var list = getServiesList();
+  if (list) {
+    services.forEach(function (service) {
+      if (service && service.label) {
+        var element = getMenuItemElement(service.id, {
+          id: "service-" + service.id,
+          type: "service",
+          label: service.label,
+          onClick: onServiceClicked,
+          onClickData: service
+        });
         list.appendChild(element);
       }
-    }
+    });
   }
 };
 
@@ -95,13 +147,12 @@ var initializeSortable = function () {
     SortableInstance = null;
   }
 
-  var list = document.getElementById("list");
+  var list = getServiesList();
   if (list) {
     SortableInstance = Sortable.create(list, {
-      dataIdAttr: "data-service-name",
+      dataIdAttr: "data-item-name",
       onSort: function () {
-        // The `this` inside this function is the sortable instance.
-        saveOrder(this);
+        saveOrder(this); // The `this` inside this function is the sortable instance.
       }
     });
 
@@ -110,8 +161,9 @@ var initializeSortable = function () {
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-  AppsGrid.GetEnabledServices(function (services) {
-    rebuildMenu(services);
+  AppsGrid.GetEnabledAppsAndServices().then(function (result) {
+    rebuildAppsMenu(result.apps);
+    rebuildServicesMenu(result.services);
     initializeSortable();
   });
 

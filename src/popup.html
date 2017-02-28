@@ -7,21 +7,49 @@
       .clearfix::after {content: ""; display: table; clear: both; }
       body { margin: 0; padding: 0;}
 
-      #list {
+      .services-area {
+        margin: 12px 28px;
+      }
+
+      .services-area:first-child {
+        margin-top: 28px;
+      }
+
+      .services-area:last-child {
+        margin-bottom: 28px;
+      }
+
+      .services-area.hide {
+        display: none;
+      }
+
+      .services-label {
+        display: none;
+        color: #737373;
+        margin: 0;
+        padding: 0;
+        font-weight: normal;
+      }
+
+      #services-areas.with-multiple-areas .services-label {
+        display: block;
+      }
+
+      .services-list {
         list-style: none;
         width: 264px;
-        margin: 28px;
+        margin: 0;
         padding: 0;
       }
 
-      #list li {
+      .services-list li {
         display: inline-block;
         float: left;
         margin: 7px 1px;
         padding: 0;
       }
 
-      #list li a {
+      .services-list li a {
         width: 84px;
         height: 84px;
         border-color: transparent;
@@ -32,7 +60,7 @@
         color: black;
       }
 
-      #list li:hover a {
+      .services-list li:hover a {
         border-color: #e5e5e5;
       }
 
@@ -60,7 +88,16 @@
   </head>
   <body>
     <div id="services">
-      <ul id="list" class="clearfix"></ul>
+      <div id="services-areas" class="with-multiple-areas">
+        <div class="services-area services-area-apps">
+          <h5 class="services-label">Apps</h5>
+          <ul class="services-list clearfix"></ul>
+        </div>
+        <div class="services-area services-area-services">
+          <h5 class="services-label">Services</h5>
+          <ul class="services-list clearfix"></ul>
+        </div>
+      </div>
       <div id="footer">
         <a id="footer-more">More</a>
       </div>
