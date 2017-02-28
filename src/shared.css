@@ -10,14 +10,6 @@
   margin: 0 auto;
 }
 
-.menu-item a .label {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: inline-block;
-  width: 100%;
-  overflow: hidden;
-}
-
 .menu-item-app a .icon {
   background-size: 64px;
 }

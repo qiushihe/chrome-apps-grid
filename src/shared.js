@@ -29,6 +29,12 @@ var AppsGrid = {
 
   DefaultServices: ["gmail", "calendar", "keep", "hangouts", "drive", "photo", "music"],
 
+  GetEnabledAreas: function () {
+    return new Promise(function (resolve) {
+      resolve(["apps", "services"]);
+    });
+  },
+
   GetEnabledApps: function () {
     return new Promise(function (resolve) {
       chrome.management.getAll(function (extensions) {
@@ -63,18 +69,6 @@ var AppsGrid = {
         });
         resolve(Object.values(allServices));
       });
-    });
-  },
-
-  GetEnabledAppsAndServices: function (callback) {
-    var enabledApps = [];
-    var enabledServices = [];
-
-    return Promise.all([
-      this.GetEnabledApps().then(function (apps) { enabledApps = apps || []; }),
-      this.GetEnabledServices().then(function (services) { enabledServices = services || []; })
-    ]).then(function () {
-      return {apps: enabledApps, services: enabledServices};
     });
   }
 };

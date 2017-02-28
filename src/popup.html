@@ -19,7 +19,7 @@
         margin-bottom: 28px;
       }
 
-      .services-area.hide {
+      .services-area[data-is-empty="true"] {
         display: none;
       }
 
@@ -31,7 +31,7 @@
         font-weight: normal;
       }
 
-      #services-areas.with-multiple-areas .services-label {
+      #services-areas[data-has-multiple-areas="true"] .services-label {
         display: block;
       }
 
@@ -64,6 +64,14 @@
         border-color: #e5e5e5;
       }
 
+      .menu-item a .label {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        display: inline-block;
+        width: 100%;
+        overflow: hidden;
+      }
+
       #footer {
         display: block;
         background-color: #F5F5F5;
@@ -88,7 +96,7 @@
   </head>
   <body>
     <div id="services">
-      <div id="services-areas" class="with-multiple-areas">
+      <div id="services-areas">
         <div class="services-area services-area-apps">
           <h5 class="services-label">Apps</h5>
           <ul class="services-list clearfix"></ul>

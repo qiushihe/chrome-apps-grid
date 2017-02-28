@@ -1,5 +1,13 @@
-var SortableInstance = null;
+var SortableInstances = {};
 var SortableSaving = false;
+
+var getAppsArea = function () {
+  return document.querySelector("#services-areas .services-area-apps");
+};
+
+var getServicesArea = function () {
+  return document.querySelector("#services-areas .services-area-services");
+};
 
 var getAppsList = function () {
   return document.querySelector(".services-area-apps .services-list");
@@ -9,7 +17,11 @@ var getServiesList = function () {
   return document.querySelector(".services-area-services .services-list");
 };
 
-var clearList = function (list) {
+var clearList = function (area, list) {
+  if (area) {
+    area.setAttribute("data-is-empty", "true");
+  }
+
   if (list) {
     while (list.firstChild) {
       list.removeChild(list.firstChild);
@@ -49,9 +61,11 @@ var onAppClicked = function (app) {
 };
 
 var rebuildAppsMenu = function (apps) {
-  clearList(getAppsList());
+  clearList(getAppsArea(), getAppsList());
 
   var list = getAppsList();
+  var isEmpty = true;
+
   if (list) {
     apps.forEach(function (app) {
       var element = getMenuItemElement(app.id, {
@@ -71,8 +85,11 @@ var rebuildAppsMenu = function (apps) {
       }
 
       list.appendChild(element);
+      isEmpty = false;
     });
   }
+
+  getAppsArea().setAttribute("data-is-empty", isEmpty ? "true" : "false");
 };
 
 var onServiceClicked = function (service) {
@@ -95,9 +112,11 @@ var onServiceClicked = function (service) {
 };
 
 var rebuildServicesMenu = function (services) {
-  clearList(getServiesList());
+  clearList(getServicesArea(), getServiesList());
 
   var list = getServiesList();
+  var isEmpty = true;
+
   if (list) {
     services.forEach(function (service) {
       if (service && service.label) {
@@ -109,13 +128,16 @@ var rebuildServicesMenu = function (services) {
           onClickData: service
         });
         list.appendChild(element);
+        isEmpty = false;
       }
     });
   }
+
+  getServicesArea().setAttribute("data-is-empty", isEmpty ? "true" : "false");
 };
 
-var loadOrder = function (sortable) {
-  var storageKey = "apps-grid-services-order";
+var loadOrder = function (type, sortable) {
+  var storageKey = "apps-grid-" + type + "-order";
   chrome.storage.sync.get(storageKey, function(data) {
     var order = data[storageKey];
     if (order) {
@@ -124,12 +146,12 @@ var loadOrder = function (sortable) {
   });
 };
 
-var saveOrder = function (sortable) {
+var saveOrder = function (type, sortable) {
   if (SortableSaving) {
     return;
   }
 
-  var storageKey = "apps-grid-services-order";
+  var storageKey = "apps-grid-" + type + "-order";
   var order = sortable.toArray();
 
   var data = {};
@@ -141,30 +163,54 @@ var saveOrder = function (sortable) {
   });
 };
 
-var initializeSortable = function () {
-  if (SortableInstance) {
-    SortableInstance.destroy();
-    SortableInstance = null;
+var initializeSortable = function (type, list) {
+  if (SortableInstances[type]) {
+    SortableInstances[type].destroy();
+    SortableInstances[type] = null;
   }
 
-  var list = getServiesList();
   if (list) {
-    SortableInstance = Sortable.create(list, {
-      dataIdAttr: "data-item-name",
+    SortableInstances[type] = Sortable.create(list, {
+      dataIdAttr: "data-" + type + "-name",
       onSort: function () {
-        saveOrder(this); // The `this` inside this function is the sortable instance.
+        saveOrder(type, this); // The `this` inside this function is the sortable instance.
       }
     });
 
-    loadOrder(SortableInstance);
+    loadOrder(type, SortableInstances[type]);
   }
 };
 
 document.addEventListener("DOMContentLoaded", function() {
-  AppsGrid.GetEnabledAppsAndServices().then(function (result) {
-    rebuildAppsMenu(result.apps);
-    rebuildServicesMenu(result.services);
-    initializeSortable();
+  document.querySelector("#services-areas").setAttribute("data-has-multiple-areas", "false");
+  document.querySelectorAll("#services-areas .services-area").forEach(function (servicesArea) {
+    servicesArea.setAttribute("data-is-empty", "true");
+  });
+
+  AppsGrid.GetEnabledAreas().then(function (areas) {
+    var areaPromises = areas.map(function (area) {
+      if (area === "apps") {
+        return AppsGrid.GetEnabledApps().then(function (apps) {
+          return rebuildAppsMenu(apps);
+        }).then(function () {
+          return initializeSortable("app", getAppsList());
+        });
+      } else if (area == "services") {
+        return AppsGrid.GetEnabledServices().then(function (services) {
+          return rebuildServicesMenu(services);
+        }).then(function () {
+          return initializeSortable("service", getServiesList());
+        })
+      } else {
+        return Promise.resolve();
+      }
+    });
+
+    Promise.all(areaPromises).then(function () {
+      if (document.querySelectorAll("#services-areas .services-area[data-is-empty=\"false\"]").length > 1) {
+        document.querySelector("#services-areas").setAttribute("data-has-multiple-areas", "true");
+      }
+    });
   });
 
   document.getElementById("footer-more").onclick = function () {
