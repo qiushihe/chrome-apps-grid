@@ -19,19 +19,19 @@
         line-height: 56px;
       }
 
-      #page-content {
+      .content-section {
         padding: 0 40px;
         max-width: 660px;
         margin-bottom: 40px;
       }
 
-      #options {
+      .options-list {
         list-style: none;
         margin: 0;
         padding: 0;
       }
 
-      #options li {
+      .options-list li {
         display: block;
         float: left;
         width: 100%;
@@ -40,17 +40,17 @@
       }
 
       @media (min-width: 580px) {
-        #options li {
+        .options-list li {
           width: 50%;
         }
       }
 
-      #options .menu-item {
+      .options-list .menu-item {
         position: relative;
         cursor: pointer;
       }
 
-      #options .menu-item .indicator {
+      .options-list .menu-item .indicator {
         content: "";
         display: block;
         position: absolute;
@@ -62,7 +62,7 @@
         border-radius: 50%;
       }
 
-      #options .menu-item.enabled .indicator > div {
+      .options-list .menu-item.enabled .indicator > div {
         transform: translateX(-50%) translateY(-50%) scale(1);
         position: absolute;
         top: 50%;
@@ -71,12 +71,12 @@
         border-radius: 50%;
       }
 
-      #options .menu-item a {
+      .options-list .menu-item a {
         line-height: 64px;
         margin-left: 30px;
       }
 
-      #options .menu-item a .icon {
+      .options-list .menu-item a .icon {
         float: left;
         margin: 0;
       }
@@ -105,11 +105,11 @@
   </head>
   <body>
     <h1 id="page-header">Apps Grid Settings</h1>
-    <div id="page-content">
+    <div class="content-section content-section-services">
       <p class="instruction">Select the services you would like to see in the Apps Grid menu:</p>
       <div class="sheet">
         <div class="sheet-line">
-          <ul id="options" class="clearfix"></ul>
+          <ul class="options-list clearfix"></ul>
         </div>
       </div>
     </div>

@@ -1,7 +1,11 @@
 var OptionsSaving = false;
 
+var getServicesList = function () {
+  return document.querySelector(".content-section-services .options-list");
+};
+
 var clearOptions = function () {
-  var options = document.getElementById("options");
+  var options = getServicesList();
   if (options) {
     while (options.firstChild) {
       options.removeChild(options.firstChild);
@@ -81,7 +85,7 @@ var saveOptions = function () {
 var rebuildOptions = function (allServices) {
   clearOptions();
 
-  var options = document.getElementById("options");
+  var options = getServicesList();
   if (options) {
     allServices.forEach(function (service) {
       var element = getServiceElement(service);
