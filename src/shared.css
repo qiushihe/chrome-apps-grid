@@ -12,10 +12,6 @@
 
 .menu-item-app a .icon {
   background-size: 64px;
-}
-
-.menu-item-app a .icon {
-  background-size: 48px;
   background-repeat: no-repeat;
   background-position: 50%;
 }

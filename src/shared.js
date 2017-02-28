@@ -35,12 +35,54 @@ var AppsGrid = {
     });
   },
 
-  GetEnabledApps: function () {
+  GetAvailableApps: function () {
     return new Promise(function (resolve) {
       chrome.management.getAll(function (extensions) {
         resolve((extensions || []).filter(function (extension) {
           return extension.isApp && extension.enabled;
-        }));
+        }).reduce(function (result, app) {
+          result[app.id] = {
+            id: app.id,
+            icons: app.icons,
+            shortName: app.shortName
+          };
+          return result;
+        }, {}));
+      });
+    });
+  },
+
+  GetEnabledApps: function () {
+    var self = this;
+    return new Promise(function (resolve) {
+      self.GetAvailableApps().then(function (apps) {
+        var allApps = JSON.parse(JSON.stringify(apps));
+        var storageKey = "apps-grid-enabled-app";
+        chrome.storage.sync.get(storageKey, function(data) {
+          var appIds = data[storageKey];
+          var enabledApps = [];
+          (appIds || []).forEach(function (appId) {
+            if (allApps[appId]) {
+              enabledApps.push(allApps[appId]);
+            }
+          });
+          resolve(enabledApps);
+        });
+      });
+    });
+  },
+
+  GetAllApps: function () {
+    var self = this;
+    return new Promise(function (resolve) {
+      self.GetAvailableApps().then(function (apps) {
+        var allApps = JSON.parse(JSON.stringify(apps));
+        self.GetEnabledApps().then(function (apps) {
+          apps.forEach(function (app) {
+            allApps[app.id].enabled = true;
+          });
+          resolve(Object.values(allApps));
+        });
       });
     });
   },
@@ -49,11 +91,15 @@ var AppsGrid = {
     return new Promise(function (resolve) {
       var storageKey = "apps-grid-enabled-service";
       chrome.storage.sync.get(storageKey, function(data) {
-        var services = data[storageKey];
-        var hasServices = services && services.length > 0;
-        resolve((hasServices ? services : AppsGrid.DefaultServices).map(function (service) {
-          return AppsGrid.AllServices[service];
-        }));
+        var serviceIds = data[storageKey];
+        var hasServices = serviceIds && serviceIds.length > 0;
+        var enabledServices = [];
+        (hasServices ? serviceIds : AppsGrid.DefaultServices).forEach(function (serviceId) {
+          if (AppsGrid.AllServices[serviceId]) {
+            enabledServices.push(AppsGrid.AllServices[serviceId]);
+          }
+        })
+        resolve(enabledServices);
       });
     });
   },

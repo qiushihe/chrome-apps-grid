@@ -22,7 +22,7 @@
       .content-section {
         padding: 0 40px;
         max-width: 660px;
-        margin-bottom: 40px;
+        margin: 20px 0;
       }
 
       .options-list {
@@ -62,7 +62,7 @@
         border-radius: 50%;
       }
 
-      .options-list .menu-item.enabled .indicator > div {
+      .options-list .menu-item[data-enabled="true"] .indicator > div {
         transform: translateX(-50%) translateY(-50%) scale(1);
         position: absolute;
         top: 50%;
@@ -81,10 +81,14 @@
         margin: 0;
       }
 
+      .options-list .menu-item-app a .icon {
+        background-size: 52px;
+      }
+
       .sheet {
         border-radius: 2px;
         box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
-        margin: 0 auto;
+        margin: 20px 0;
       }
 
       .sheet-line {
@@ -95,6 +99,7 @@
         color: rgba(0,0,0,0.65);
         font-size: 14px;
         line-height: 20px;
+        margin: 20px 0;
       }
     </style>
 
@@ -105,6 +110,14 @@
   </head>
   <body>
     <h1 id="page-header">Apps Grid Settings</h1>
+    <div class="content-section content-section-apps">
+      <p class="instruction">Select the apps you would like to see in the Apps Grid menu:</p>
+      <div class="sheet">
+        <div class="sheet-line">
+          <ul class="options-list clearfix"></ul>
+        </div>
+      </div>
+    </div>
     <div class="content-section content-section-services">
       <p class="instruction">Select the services you would like to see in the Apps Grid menu:</p>
       <div class="sheet">
