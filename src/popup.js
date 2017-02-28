@@ -29,11 +29,11 @@ var clearList = function (area, list) {
   }
 };
 
-var getMenuItemElement = function (name, options) {
+var getMenuItemElement = function (dataId, options) {
   var element = document.createElement("li");
   element.id = options.id;
   element.className = "menu-item menu-item-" + options.type;
-  element.setAttribute("data-" + options.type + "-name", name);
+  element.setAttribute("data-" + options.type + "-name", dataId);
 
   var link = document.createElement("a");
   link.onclick = function () {

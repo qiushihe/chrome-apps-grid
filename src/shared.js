@@ -47,7 +47,7 @@ var AppsGrid = {
 
   GetEnabledServices: function () {
     return new Promise(function (resolve) {
-      var storageKey = "apps-grid-enabled-services";
+      var storageKey = "apps-grid-enabled-service";
       chrome.storage.sync.get(storageKey, function(data) {
         var services = data[storageKey];
         var hasServices = services && services.length > 0;
